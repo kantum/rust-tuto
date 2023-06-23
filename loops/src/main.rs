@@ -1,5 +1,3 @@
-use std::any::type_name;
-
 fn main() {
     let mut counter = 0;
 
