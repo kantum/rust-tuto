@@ -1,0 +1,12 @@
+[package]
+name = "rust-adventure-mails"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+dotenv = "0.15.0"
+reqwest = { version = "0.11.18", features = ["json", "blocking"] }
+serde = "1.0.166"
+serde_json = "1.0.100"
