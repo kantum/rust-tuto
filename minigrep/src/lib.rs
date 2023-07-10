@@ -14,12 +14,24 @@ pub struct Config {
 
 impl Config {
     // Create the configuration from arguments and environment variable.
-    pub fn build(args: &[String]) -> Result<Config, &'static str> {
-        if args.len() < 3 {
-            return Err("Not enough arguments");
-        }
-        let query = args[1].clone();
-        let file_path = args[2].clone();
+    pub fn build(
+        mut args: impl Iterator<Item = String>,
+    ) -> Result<Config, &'static str> {
+        // if args.len() < 3 {
+        //     return Err("Not enough arguments");
+        // }
+        args.next();
+        // let query = args[1].clone();
+        let query = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a query string"),
+        };
+        let file_path = match args.next() {
+            Some(arg) => arg,
+            None => return Err("Didn't get a file path"),
+        };
+        // let file_path = args[2].clone();
+        //
         let ignore_case = env::var("IGNORE_CASE").is_ok();
         let colored_output = true;
         Ok(Config {
@@ -71,13 +83,10 @@ pub fn colorize(query: &str, inputs: Vec<String>) -> Vec<String> {
 // Returns a vector of string slices with each line from contents that contains
 // query string slice.
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    let mut results = Vec::new();
-    for line in contents.lines() {
-        if line.contains(query) {
-            results.push(line);
-        }
-    }
-    results
+    contents
+        .lines()
+        .filter(|line| line.contains(query))
+        .collect()
 }
 
 // Returns a vector of string slices with each line from contents that contains
@@ -86,14 +95,10 @@ pub fn search_case_insensitive<'a>(
     query: &str,
     contents: &'a str,
 ) -> Vec<&'a str> {
-    let mut results = Vec::new();
-    let query = query.to_lowercase();
-    for line in contents.lines() {
-        if line.to_lowercase().contains(&query) {
-            results.push(line);
-        }
-    }
-    results
+    contents
+        .lines()
+        .filter(|line| line.to_lowercase().contains(&query.to_lowercase()))
+        .collect()
 }
 
 #[cfg(test)]
