@@ -1,7 +1,9 @@
+//! # Minigrep
+//! The ripgrep killer
 use colored::*;
 
 use std::env;
-use std::error::Error;
+pub use std::error::Error;
 use std::fs;
 
 // Global structure containing the program parameters.
@@ -80,8 +82,23 @@ pub fn colorize(query: &str, inputs: Vec<String>) -> Vec<String> {
     results
 }
 
-// Returns a vector of string slices with each line from contents that contains
-// query string slice.
+/// Returns a vector of string slices with each line from contents that contains
+/// query string slice.
+///
+/// # Examples
+/// ```
+///#[test]
+///fn one_result() {
+///let query = "duct";
+///let contents = "\
+///Rust:
+///safe, fast, productive.
+///Pick three.
+///Duct tape.";
+///
+///assert_eq!(vec!["safe, fast, productive."], search(query, contents))
+///}
+///
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     contents
         .lines()
